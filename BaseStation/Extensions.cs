@@ -27,9 +27,6 @@ namespace BaseStation
             driver.WriteBit(value ? PinValue.High : PinValue.Low);
         }
 
-        public static StaticDisplayLoop ToDisplayLoop(this DisplayFrame frame, DisplayDriver driver)
-            => new StaticDisplayLoop(driver, frame);
-
         public static decimal Pow(this decimal value, int exponent)
         {
             if (exponent < 0)
