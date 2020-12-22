@@ -93,7 +93,7 @@ namespace BaseStation
         /// Gets the value of a particular digit.
         /// </summary>
         /// <param name="value">value whose digit to get</param>
-        /// <param name="digitIndex">digit index. Positive indices count leftward from the decimal point;
+        /// <param name="digitIndex">digit index. Non-negative indices count leftward from the decimal point;
         /// negative indices count rightward from the decimal point.</param>
         /// <returns></returns>
         public static int GetDigit(this decimal value, int digitIndex)

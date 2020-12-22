@@ -114,8 +114,8 @@ namespace BaseStation
 
             for (int i = 0; i < integerDigits; i++)
             {
-                bool dot = (i == 0) && (fractionalDigits > 0);
-                var character = DisplayCharacter.FromDigit(value.GetDigit(0), dot);
+                bool dot = (i == integerDigits - 1) && (fractionalDigits > 0);
+                var character = DisplayCharacter.FromDigit(value.GetDigit(integerDigits - i - 1), dot);
                 frame = frame.WithCharacter(totalDigits - i - 1, character);
             }
 
