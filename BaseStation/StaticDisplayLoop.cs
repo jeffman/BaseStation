@@ -23,7 +23,7 @@ namespace BaseStation
             if (cancellationToken.IsCancellationRequested)
                 return Task.FromCanceled(cancellationToken);
 
-            Driver.ShowFrame(Frame);
+            Driver.WriteFrame(Frame);
             return Task.FromResult(true);
         }
     }

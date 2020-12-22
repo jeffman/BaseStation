@@ -27,7 +27,7 @@ namespace BaseStation
                 if (cancellationToken.IsCancellationRequested)
                     break;
 
-                Driver.ShowFrame(frame);
+                Driver.WriteFrame(frame);
 
                 try
                 {

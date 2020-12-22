@@ -9,6 +9,7 @@ namespace BaseStation
         private Task _loopTask;
         private CancellationTokenSource _cancelTokenSource;
         private int _guard;
+        public bool IsRunning => _loopTask != null;
 
         public async Task StartNewLoop(IDisplayLoop loop)
         {
@@ -37,7 +38,7 @@ namespace BaseStation
             }
         }
 
-        private async Task StopAndCompleteLoop()
+        public async Task StopAndCompleteLoop()
         {
             if (_loopTask == null)
                 return;
