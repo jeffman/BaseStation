@@ -21,7 +21,7 @@ namespace BaseStation.Server
         {
             try
             {
-                using (var ledDriver = new LedDriver(() => new GpioController(PinNumberingScheme.Logical)))
+                using (var ledDriver = LedDriver.Create())
                 {
                     ledDriver.SetOutputEnabled(true);
                     var displayDriver = new DisplayDriver(ledDriver);

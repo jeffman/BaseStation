@@ -5,24 +5,32 @@ namespace BaseStation
 {
     public class LedDriver : IDisposable
     {
-        public GpioController Controller { get; }
+        public IGpioController Controller { get; }
         public LedDriverSettings Settings { get; }
+        private bool ownsController = false;
 
-        public LedDriver(Func<GpioController> controllerFactory)
-            : this(controllerFactory, new LedDriverSettings())
+        public LedDriver(IGpioController controller)
+            : this(controller, new LedDriverSettings())
         { }
 
-        public LedDriver(Func<GpioController> controllerFactory, LedDriverSettings settings)
+        public LedDriver(IGpioController controller, LedDriverSettings settings)
         {
-            controllerFactory.ThrowIfNull(nameof(controllerFactory));
+            controller.ThrowIfNull(nameof(controller));
             settings.ThrowIfNull(nameof(settings));
-
-            Controller = controllerFactory();
-            if (Controller == null)
-               throw new ArgumentNullException("Factory cannot generate null values", nameof(controllerFactory));
-
+            Controller = controller;
             Settings = settings;
             SetUpController();
+        }
+
+        public static LedDriver Create() => Create(new LedDriverSettings());
+
+        public static LedDriver Create(LedDriverSettings settings)
+        {
+            settings.ThrowIfNull(nameof(settings));
+            var controller = new GpioControllerWrapper(new GpioController(PinNumberingScheme.Logical));
+            var driver = new LedDriver(controller, settings);
+            driver.ownsController = true;
+            return driver;
         }
 
         protected virtual void SetUpController()
@@ -95,6 +103,10 @@ namespace BaseStation
                 if (!_isDisposed)
                 {
                     TearDownController();
+                    if (ownsController)
+                    {
+                        Controller.Dispose();
+                    }
                     _isDisposed = true;
                 }
             }
