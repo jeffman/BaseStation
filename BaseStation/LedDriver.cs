@@ -39,7 +39,7 @@ namespace BaseStation
             Controller.OpenPin(Settings.ClockPin, PinMode.Output);
             Controller.OpenPin(Settings.LatchPin, PinMode.Output);
             Controller.OpenPin(Settings.EnablePin, PinMode.Output);
-            SetOutputEnabled(false);
+            SetOutputEnabled(true);
         }
 
         protected virtual void TearDownController()
@@ -69,7 +69,7 @@ namespace BaseStation
             PulseWait();
         }
 
-        public void SetOutputEnabled(bool enabled)
+        protected virtual void SetOutputEnabled(bool enabled)
         {
             Controller.Write(Settings.EnablePin, enabled ? PinValue.Low : PinValue.High);
             PulseWait();
