@@ -5,14 +5,14 @@ namespace BaseStation
 {
     public class LedDriver : IDisposable
     {
-        public IGpioController Controller { get; }
+        public GpioController Controller { get; }
         public LedDriverSettings Settings { get; }
 
-        public LedDriver(Func<IGpioController> controllerFactory)
+        public LedDriver(Func<GpioController> controllerFactory)
             : this(controllerFactory, new LedDriverSettings())
         { }
 
-        public LedDriver(Func<IGpioController> controllerFactory, LedDriverSettings settings)
+        public LedDriver(Func<GpioController> controllerFactory, LedDriverSettings settings)
         {
             controllerFactory.ThrowIfNull(nameof(controllerFactory));
             settings.ThrowIfNull(nameof(settings));
