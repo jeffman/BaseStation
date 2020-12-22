@@ -8,5 +8,6 @@ namespace BaseStation
         public int ClockPin { get; set; } = 23;
         public int LatchPin { get; set; } = 24;
         public int EnablePin { get; set; } = 25;
+        public int TotalBits { get; set; } = 32;
     }
 }

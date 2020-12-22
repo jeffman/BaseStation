@@ -39,12 +39,14 @@ namespace BaseStation
             Controller.OpenPin(Settings.ClockPin, PinMode.Output);
             Controller.OpenPin(Settings.LatchPin, PinMode.Output);
             Controller.OpenPin(Settings.EnablePin, PinMode.Output);
+            ClearBits();
             SetOutputEnabled(true);
         }
 
         protected virtual void TearDownController()
         {
             SetOutputEnabled(false);
+            ClearBits();
             Controller.ClosePin(Settings.DataInPin);
             Controller.ClosePin(Settings.ClockPin);
             Controller.ClosePin(Settings.LatchPin);
@@ -78,6 +80,14 @@ namespace BaseStation
         protected virtual void PulseWait()
         {
             Helpers.WaitMicro(10);
+        }
+
+        protected virtual void ClearBits()
+        {
+            for (int i = 0; i < Settings.TotalBits; i++)
+            {
+                WriteBit(PinValue.Low);
+            }
         }
 
         #region IDisposable
