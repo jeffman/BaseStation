@@ -27,6 +27,7 @@ My image editor (Google Draw) made it easier to see through the mess of wires on
   They'd been in my box for 11 years.
 * 2x20 0.100" GPIO pin header
 * Prototype PCB, 24 holes by 18 holes
+* M2 x 25mm screws with nuts (qty. 4)
 
 ### Design choices
 
@@ -155,3 +156,17 @@ To make the API a bit more fluent, you can create new `DisplayFrame`s by applyin
 `DisplayDriver` sits above `LedDriver`: it takes `DisplayFrame`s and pushes the right bits in the right order to an `LedDriver`.
 
 Because the main use case is displaying simple strings and numbers, `DisplayDriver` also has some extension methods for directly displaying those things so that you don't have to manually create a bunch of temporary `DisplayFrame`s.
+
+## Case
+
+I made the case with Tinkercad.
+The [OBJ files](case/tinker.obj) are in the `case/` folder.
+
+![3D case model](images/case.png)
+
+I think it came out pretty well: I got all the dimensions and placement correct so I didn't have to rework any of it.
+
+The front and back faces however were way too thin (0.5 mm), and the side walls were also kinda thin (1 mm).
+The cutout I made for the standalone LEDs snapped off pretty easily and it bulges out a bit from all the wires and components inside.
+The depth of the whole thing is also a bit warped when assembled so it doesn't fit quite right in the feet I made.
+If I had another go, I would make the front/back faces and side walls both 1.5 mm.
