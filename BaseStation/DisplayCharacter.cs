@@ -107,6 +107,9 @@ namespace BaseStation
 
         public static DisplayCharacter FromSymbol(char symbol, bool dot)
         {
+            if (char.IsDigit(symbol))
+                return FromDigit((int)symbol - (int)'0');
+
             if (_symbolValues.TryGetValue(symbol, out byte value) ||
                 _symbolValues.TryGetValue(char.ToUpperInvariant(symbol), out value) ||
                 _symbolValues.TryGetValue(char.ToLowerInvariant(symbol), out value))
