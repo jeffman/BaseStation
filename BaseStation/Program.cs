@@ -28,16 +28,14 @@ namespace BaseStation.Server
 
                     if (options.StringValue != null)
                     {
-                        if (options.StringValue.Length <= 3)
+                        if (options.ForceScroll || DisplayFrame.GetDisplayedStringLength(options.StringValue) > 3)
                         {
-                            displayDriver.WriteString(options.StringValue);
-                            task = Task.Delay(options.Duration);
+                            task = displayDriver.ScrollString(options.StringValue, options.Duration);
                         }
                         else
                         {
-                            // A scroll uses length+6 frames, so each frame should be duration/(length+6)
-                            int scrollInterval = options.Duration / (options.StringValue.Length + 6);
-                            task = displayDriver.ScrollString(options.StringValue, scrollInterval);
+                            displayDriver.WriteString(options.StringValue);
+                            task = Task.Delay(options.Duration);
                         }
                     }
                     else if (options.DecimalValue != null)
@@ -83,6 +81,9 @@ namespace BaseStation.Server
     {
         [Option('s', "string", SetName = "cmd")]
         public string StringValue { get; set; }
+
+        [Option('c', "force-scroll", HelpText = "Force scrolling for short strings.")]
+        public bool ForceScroll { get; set; }
 
         [Option('d', "decimal", SetName = "cmd")]
         public decimal? DecimalValue { get; set; }

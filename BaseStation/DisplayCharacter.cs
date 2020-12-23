@@ -6,8 +6,9 @@ namespace BaseStation
     public struct DisplayCharacter
     {
         public static DisplayCharacter Full { get; } = DisplayCharacter.FromRaw(0b11111111);
-
         public static DisplayCharacter Empty { get; } = DisplayCharacter.FromRaw(0);
+
+        public bool HasDot => (Value & 1) != 0;
 
         /*
         LED segment map:
@@ -117,6 +118,8 @@ namespace BaseStation
 
             return new DisplayCharacter(Dotify(_symbolValues['?'], dot));
         }
+
+        public DisplayCharacter WithDot() => new DisplayCharacter(Dotify(Value, true));
 
         private static byte Dotify(byte value, bool dot)
         {

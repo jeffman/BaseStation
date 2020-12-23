@@ -83,12 +83,63 @@ namespace BaseStation
             return new DisplayFrame(newCharacters, _statusLeds);
         }
 
+        /// <summary>
+        /// Creates a new frame where one existing character is pushed out to make room for another.
+        /// This can be called many times in succession to create a "scrolling" effect.
+        /// </summary>
+        /// <param name="pushFromLeft">If true, the new character is pushed in from the left and the other two characters will be pushed to the right.</param>
+        public DisplayFrame WithPushedCharacter(DisplayCharacter character, bool pushFromLeft = false)
+        {
+            DisplayCharacter[] newCharacters;
+            if (pushFromLeft)
+            {
+                newCharacters = new DisplayCharacter[]
+                {
+                    _characters[1],
+                    _characters[2],
+                    character
+                };
+            }
+            else
+            {
+                newCharacters = new DisplayCharacter[]
+                {
+                    character,
+                    _characters[0],
+                    _characters[1]
+                };
+            }
+            return new DisplayFrame(newCharacters, _statusLeds);
+        }
+
+        /// <summary>
+        /// Computes the number of <c>DisplayCharacter</c>s needed to display the given string,
+        /// taking into account that some dot characters can be combined with characters before it.
+        /// </summary>
+        public static int GetDisplayedStringLength(string str) => GetString(str).Count();
+
+        public static IEnumerable<DisplayCharacter> GetString(string str)
+        {
+            for (int i = 0; i < str.Length; i++)
+            {
+                DisplayCharacter current = DisplayCharacter.FromSymbol(str[i]);
+
+                // Special case: lookahead for dot and combine it if necessary
+                if (i < str.Length - 1 && str[i + 1] == '.' && !current.HasDot)
+                {
+                    current = current.WithDot();
+                    i++;
+                }
+
+                yield return current;
+            }
+        }
+
         public static DisplayFrame FromString(string str)
         {
             str.ThrowIfNull(nameof(str));
-            str = str.PadLeft(CharacterCount);
-
-            return new DisplayFrame(str.Reverse().Select(DisplayCharacter.FromSymbol));
+            var displayString = GetString(str.PadLeft(3));
+            return new DisplayFrame(displayString.Reverse().Take(3).ToArray());
         }
 
         public static DisplayFrame FromDecimal(decimal value, StatusLed signLed)

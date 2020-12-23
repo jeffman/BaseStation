@@ -37,39 +37,33 @@ namespace BaseStation
 
         public void WriteString(string str)
         {
-            WriteFrame(DisplayFrame.FromString(str.PadLeft(3, ' ')));
+            WriteFrame(DisplayFrame.FromString(str));
         }
 
-        public async Task ScrollString(string str, int interval)
+        public async Task ScrollString(string str, int duration)
         {
-            if (str.Length < 4)
+            var displayString = DisplayFrame.GetString(str).ToArray();
+            int scrollInterval = duration / (displayString.Length + 6);
+
+            // Start with a blank frame
+            var frame = DisplayFrame.Empty;
+            WriteFrame(frame);
+            await Task.Delay(scrollInterval);
+
+            // Push each character in from the right, one at a time
+            foreach (var c in displayString)
             {
-                WriteString(str);
-                return;
+                frame = frame.WithPushedCharacter(c);
+                WriteFrame(frame);
+                await Task.Delay(scrollInterval);
             }
 
-            // Three frames of intro
+            // Push three more blank characters to end off with a blank screen
             for (int i = 0; i < 3; i++)
             {
-                string intro = (new string(' ', 3 - i)) + str.Substring(0, i);
-                WriteString(intro);
-                await Task.Delay(interval);
-            }
-
-            // Show each character
-            for (int i = 0; i < str.Length - 2; i++)
-            {
-                string chunk = str.Substring(i, 3);
-                WriteString(chunk);
-                await Task.Delay(interval);
-            }
-
-            // Three frames of outtro
-            for (int i = 0; i < 3; i++)
-            {
-                string outtro = str.Substring(str.Length - 2 + i) + (new string(' ', i + 1));
-                WriteString(outtro);
-                await Task.Delay(interval);
+                frame = frame.WithPushedCharacter(DisplayCharacter.Empty);
+                WriteFrame(frame);
+                await Task.Delay(scrollInterval);
             }
         }
 
