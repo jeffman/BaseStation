@@ -49,6 +49,16 @@ namespace BaseStation.Server
                     {
                         task = displayDriver.BusyLoop(options.BusyDelay.Value, options.Duration);
                     }
+                    else if (options.RawValue != null)
+                    {
+                        for (int i = 0; i < 32; i++)
+                        {
+                            bool bit = ((options.RawValue.Value << i) & 0x80000000u) != 0u;
+                            ledDriver.WriteBit(bit);
+                        }
+                        ledDriver.Latch();
+                        task = Task.Delay(options.Duration);
+                    }
                     else
                     {
                         Console.WriteLine("No option selected.");
@@ -82,5 +92,8 @@ namespace BaseStation.Server
 
         [Option('t', "time", Default = 3000, HelpText = "Duration, in milliseconds.")]
         public int Duration { get; set; }
+
+        [Option('r', "raw", SetName = "cmd", HelpText = "Write raw value to shift registers. Value is a 32-bit unsigned decimal integer. Bits are pushed MSB to LSB.")]
+        public uint? RawValue { get; set; }
     }
 }
